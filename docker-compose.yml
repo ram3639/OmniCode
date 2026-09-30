@@ -1,0 +1,165 @@
+services:
+  # MongoDB Local Instance
+  mongodb:
+    image: mongo:7
+    container_name: omnicode-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - omnicode-network
+    restart: unless-stopped
+
+  # Redis (required by Judge0)
+  redis:
+    image: redis:7-alpine
+    container_name: omnicode-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - omnicode-network
+    restart: unless-stopped
+
+  # PostgreSQL (required by Judge0)
+  postgres:
+    image: postgres:15-alpine
+    container_name: omnicode-postgres
+    environment:
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_password
+      POSTGRES_DB: judge0
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - omnicode-network
+    restart: unless-stopped
+
+  # Judge0 Server
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    container_name: omnicode-judge0-server
+    ports:
+      - "2358:2358"
+    environment:
+      RAILS_ENV: production
+      RAILS_MAX_THREADS: 4
+      SECRET_KEY_BASE: omnicode_judge0_secret_key_base_2024
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_password
+      POSTGRES_DB: judge0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ENABLE_WAIT_RESULT: "true"
+      ENABLE_BATCHED_SUBMISSIONS: "true"
+      CPU_TIME_LIMIT: 5
+      CPU_EXTRA_TIME: 1
+      WALL_TIME_LIMIT: 15
+      MEMORY_LIMIT: 512000
+      MAX_MEMORY_LIMIT: 2048000
+      MAX_PROCESSES_AND_OR_THREADS: 256
+      MAX_MAX_PROCESSES_AND_OR_THREADS: 256
+      STACK_LIMIT: 128000
+      MAX_STACK_LIMIT: 256000
+      ENABLE_ADDITIONAL_FILES: "false"
+      # Force per-process limits instead of cgroup limits (fixes cgroups v2)
+      ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT: "true"
+      ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT: "true"
+      ALLOW_ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT: "true"
+      ALLOW_ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT: "true"
+    privileged: true
+    # cgroups v1 compatibility for isolate sandbox
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - omnicode-network
+    restart: unless-stopped
+
+  # Judge0 Workers
+  judge0-workers:
+    image: judge0/judge0:1.13.1
+    container_name: omnicode-judge0-workers
+    command: ["./scripts/workers"]
+    environment:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: omnicode_judge0_secret_key_base_2024
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_password
+      POSTGRES_DB: judge0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ENABLE_WAIT_RESULT: "true"
+      ENABLE_BATCHED_SUBMISSIONS: "true"
+      CPU_TIME_LIMIT: 5
+      CPU_EXTRA_TIME: 1
+      WALL_TIME_LIMIT: 15
+      MEMORY_LIMIT: 512000
+      MAX_MEMORY_LIMIT: 2048000
+      MAX_PROCESSES_AND_OR_THREADS: 256
+      MAX_MAX_PROCESSES_AND_OR_THREADS: 256
+      STACK_LIMIT: 128000
+      MAX_STACK_LIMIT: 256000
+      # Force per-process limits instead of cgroup limits (fixes cgroups v2)
+      ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT: "true"
+      ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT: "true"
+      ALLOW_ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT: "true"
+      ALLOW_ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT: "true"
+    privileged: true
+    # cgroups v1 compatibility for isolate sandbox
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - omnicode-network
+    restart: unless-stopped
+
+  # Python FastAPI Microservice (AI)
+  microservice:
+    build:
+      context: ./microservice
+      dockerfile: Dockerfile
+    container_name: omnicode-microservice
+    ports:
+      - "8000:8000"
+    environment:
+      SIMILARITY_THRESHOLD: 0.85
+      MODEL_NAME: microsoft/unixcoder-base
+    volumes:
+      - model_cache:/root/.cache/huggingface
+    networks:
+      - omnicode-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  model_cache:
+    driver: local
+
+networks:
+  omnicode-network:
+    driver: bridge

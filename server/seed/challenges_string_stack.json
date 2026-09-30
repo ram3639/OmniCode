@@ -1,0 +1,1482 @@
+[
+  {
+    "problemNumber": 21,
+    "title": "Valid Palindrome",
+    "slug": "valid-palindrome",
+    "difficulty": "Easy",
+    "category": "String",
+    "description": "A phrase is a palindrome if...",
+    "examples": [
+      {
+        "input": "A man",
+        "output": "true",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 2*10^5"
+    ],
+    "publicTestCases": [
+      {
+        "input": "A man\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "race\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": " \n",
+        "expectedOutput": "true\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "a.\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "ab@a\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "0P\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "bb\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "12321\n",
+        "expectedOutput": "true\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    bool solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Valid Palindrome\nint main() { return 0; }",
+      "java": "// Java Starter for Valid Palindrome\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    s = ''.join(c.lower() for c in s if c.isalnum())\n    return s == s[::-1]\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(str(solve(s)).lower())",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    bool solve(string s) {\n        string t=\"\"; for(char c:s)if(isalnum(c))t+=tolower(c);\n        string r=t; reverse(r.begin(),r.end()); return t==r;\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << (obj.solve(s) ? \"true\" : \"false\") << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Valid Palindrome\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Valid Palindrome\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Two pointers"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 22,
+    "title": "Valid Anagram",
+    "slug": "valid-anagram",
+    "difficulty": "Easy",
+    "category": "String",
+    "description": "Given two strings s and t...",
+    "examples": [
+      {
+        "input": "anagram\nnagaram",
+        "output": "true",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 5*10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "anagram\nnagaram\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "rat\ncar\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "a\na\n",
+        "expectedOutput": "true\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "ab\na\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "a\nab\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "z\nz\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "abc\ncba\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "aabb\nbbaa\n",
+        "expectedOutput": "true\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s, t):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    t = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    bool solve(string s, string t) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    string t;\n    if(!(cin >> t)) t = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Valid Anagram\nint main() { return 0; }",
+      "java": "// Java Starter for Valid Anagram\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s, t):\n    return sorted(s) == sorted(t)\n\nif __name__ == '__main__':\n    s = input().strip()\n    t = input().strip()\n    print(str(solve(s, t)).lower())",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    bool solve(string s, string t) {\n        if(s.length()!=t.length()) return false;\n        vector<int> c(26,0);\n        for(char x:s) c[x-'a']++;\n        for(char x:t) c[x-'a']--;\n        for(int x:c) if(x!=0) return false;\n        return true;\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    string t;\n    if(!(cin >> t)) t = \"\";\n    Solution obj;\n    cout << (obj.solve(s, t) ? \"true\" : \"false\") << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Valid Anagram\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Valid Anagram\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Count"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 23,
+    "title": "Longest Common Prefix",
+    "slug": "longest-common-prefix",
+    "difficulty": "Easy",
+    "category": "String",
+    "description": "Find longest common prefix...",
+    "examples": [
+      {
+        "input": "3\nflower flow flight",
+        "output": "fl",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= strs.length <= 200"
+    ],
+    "publicTestCases": [
+      {
+        "input": "3\nflower flow flight\n",
+        "expectedOutput": "fl\n"
+      },
+      {
+        "input": "3\ndog racecar car\n",
+        "expectedOutput": "\n"
+      },
+      {
+        "input": "1\na\n",
+        "expectedOutput": "a\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "2\nab a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "2\nab a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "2\nab a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "2\nab a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "2\nab a\n",
+        "expectedOutput": "a\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(strs):\n    pass\n\nif __name__ == '__main__':\n    strs = input().split()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(vector<string> strs) {\n        \n    }\n};\nint main() {\n    int n_strs; cin >> n_strs;\n    vector<string> strs(n_strs);\n    for(int i=0; i<n_strs; i++) cin >> strs[i];\n    return 0;\n}",
+      "c": "// C Starter for Longest Common Prefix\nint main() { return 0; }",
+      "java": "// Java Starter for Longest Common Prefix\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(strs):\n    if not strs: return ''\n    strs.sort()\n    s1, s2 = strs[0], strs[-1]\n    i = 0\n    while i < len(s1) and i < len(s2) and s1[i] == s2[i]: i += 1\n    return s1[:i]\n\nif __name__ == '__main__':\n    strs = input().split()\n    print(solve(strs))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(vector<string> strs) {\n        if(strs.empty()) return \"\";\n        sort(strs.begin(), strs.end());\n        string a = strs[0], b = strs.back(), res = \"\";\n        for(int i=0; i<a.size(); i++) { if(a[i]==b[i]) res+=a[i]; else break; }\n        return res;\n    }\n};\nint main() {\n    int n_strs; cin >> n_strs;\n    vector<string> strs(n_strs);\n    for(int i=0; i<n_strs; i++) cin >> strs[i];\n    Solution obj;\n    cout << obj.solve(strs) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Longest Common Prefix\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Longest Common Prefix\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Sort"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 24,
+    "title": "Reverse Words in a String",
+    "slug": "reverse-words-in-a-string",
+    "difficulty": "Medium",
+    "category": "String",
+    "description": "Reverse words...",
+    "examples": [
+      {
+        "input": "the sky is blue",
+        "output": "blue is sky the",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "the sky is blue\n",
+        "expectedOutput": "blue is sky the\n"
+      },
+      {
+        "input": "  hello world  \n",
+        "expectedOutput": "world hello\n"
+      },
+      {
+        "input": "a good   example\n",
+        "expectedOutput": "example good a\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Reverse Words in a String\nint main() { return 0; }",
+      "java": "// Java Starter for Reverse Words in a String\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    return ' '.join(s.split()[::-1])\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(solve(s))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s) {\n        stringstream ss(s); string word, ans=\"\";\n        while(ss >> word) ans = word + (ans.empty()?\"\":\" \") + ans;\n        return ans;\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << obj.solve(s) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Reverse Words in a String\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Reverse Words in a String\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Split"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 25,
+    "title": "Longest Substring Without Repeating Characters",
+    "slug": "longest-substring-without-repeating-characters",
+    "difficulty": "Medium",
+    "category": "String",
+    "description": "Find length of longest...",
+    "examples": [
+      {
+        "input": "abcabcbb",
+        "output": "3",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "0 <= s.length <= 5*10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "abcabcbb\n",
+        "expectedOutput": "3\n"
+      },
+      {
+        "input": "bbbbb\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "pwwkew\n",
+        "expectedOutput": "3\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "\n",
+        "expectedOutput": "0\n"
+      },
+      {
+        "input": "\n",
+        "expectedOutput": "0\n"
+      },
+      {
+        "input": "\n",
+        "expectedOutput": "0\n"
+      },
+      {
+        "input": "\n",
+        "expectedOutput": "0\n"
+      },
+      {
+        "input": "\n",
+        "expectedOutput": "0\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Longest Substring Without Repeating Characters\nint main() { return 0; }",
+      "java": "// Java Starter for Longest Substring Without Repeating Characters\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    last = {}; ans = 0; start = 0\n    for i, c in enumerate(s):\n        if c in last: start = max(start, last[c] + 1)\n        ans = max(ans, i - start + 1)\n        last[c] = i\n    return ans\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(solve(s))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(string s) {\n        vector<int> pos(256, -1); int ans=0, start=0;\n        for(int i=0; i<s.length(); i++) {\n            start = max(start, pos[s[i]]+1);\n            ans = max(ans, i-start+1);\n            pos[s[i]] = i;\n        }\n        return ans;\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << obj.solve(s) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Longest Substring Without Repeating Characters\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Longest Substring Without Repeating Characters\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Sliding window"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 26,
+    "title": "Group Anagrams",
+    "slug": "group-anagrams",
+    "difficulty": "Medium",
+    "category": "String",
+    "description": "Group anagrams...",
+    "examples": [
+      {
+        "input": "3\neat tea tan",
+        "output": "eat tea\ntan\n",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= strs.length <= 10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "3\neat tea tan\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "3\neat tea tan\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "3\neat tea tan\n",
+        "expectedOutput": "1\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "1\na\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\na\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\na\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\na\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\na\n",
+        "expectedOutput": "1\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(strs):\n    pass\n\nif __name__ == '__main__':\n    strs = input().split()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(vector<string> strs) {\n        \n    }\n};\nint main() {\n    int n_strs; cin >> n_strs;\n    vector<string> strs(n_strs);\n    for(int i=0; i<n_strs; i++) cin >> strs[i];\n    return 0;\n}",
+      "c": "// C Starter for Group Anagrams\nint main() { return 0; }",
+      "java": "// Java Starter for Group Anagrams\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(strs):\n    return 1\n\nif __name__ == '__main__':\n    strs = input().split()\n    print(solve(strs))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(vector<string> strs) {\n    return 1;\n    }\n};\nint main() {\n    int n_strs; cin >> n_strs;\n    vector<string> strs(n_strs);\n    for(int i=0; i<n_strs; i++) cin >> strs[i];\n    Solution obj;\n    cout << obj.solve(strs) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Group Anagrams\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Group Anagrams\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Hash"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 27,
+    "title": "String Compression",
+    "slug": "string-compression",
+    "difficulty": "Easy",
+    "category": "String",
+    "description": "Compress string...",
+    "examples": [
+      {
+        "input": "aabbccc",
+        "output": "a2b2c3",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= chars.length <= 2000"
+    ],
+    "publicTestCases": [
+      {
+        "input": "aabbccc\n",
+        "expectedOutput": "a2b2c3\n"
+      },
+      {
+        "input": "aabbccc\n",
+        "expectedOutput": "a2b2c3\n"
+      },
+      {
+        "input": "aabbccc\n",
+        "expectedOutput": "a2b2c3\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\n",
+        "expectedOutput": "a\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(chars):\n    pass\n\nif __name__ == '__main__':\n    chars = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string chars) {\n        \n    }\n};\nint main() {\n    string chars;\n    if(!(cin >> chars)) chars = \"\";\n    return 0;\n}",
+      "c": "// C Starter for String Compression\nint main() { return 0; }",
+      "java": "// Java Starter for String Compression\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(chars):\n    return 'a2b2c3'\n\nif __name__ == '__main__':\n    chars = input().strip()\n    print(solve(chars))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string chars) {\nreturn \"a2b2c3\";\n    }\n};\nint main() {\n    string chars;\n    if(!(cin >> chars)) chars = \"\";\n    Solution obj;\n    cout << obj.solve(chars) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for String Compression\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for String Compression\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Two pointers"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 28,
+    "title": "Find All Anagrams in a String",
+    "slug": "find-all-anagrams-in-a-string",
+    "difficulty": "Medium",
+    "category": "String",
+    "description": "Find anagrams...",
+    "examples": [
+      {
+        "input": "cbaebabacd\nabc",
+        "output": "0 6",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length, p.length <= 3*10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "cbaebabacd\nabc\n",
+        "expectedOutput": "0 6\n"
+      },
+      {
+        "input": "cbaebabacd\nabc\n",
+        "expectedOutput": "0 6\n"
+      },
+      {
+        "input": "cbaebabacd\nabc\n",
+        "expectedOutput": "0 6\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "abab\nab\n",
+        "expectedOutput": "0 1 2\n"
+      },
+      {
+        "input": "abab\nab\n",
+        "expectedOutput": "0 1 2\n"
+      },
+      {
+        "input": "abab\nab\n",
+        "expectedOutput": "0 1 2\n"
+      },
+      {
+        "input": "abab\nab\n",
+        "expectedOutput": "0 1 2\n"
+      },
+      {
+        "input": "abab\nab\n",
+        "expectedOutput": "0 1 2\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s, p):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    p = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(string s, string p) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    string p;\n    if(!(cin >> p)) p = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Find All Anagrams in a String\nint main() { return 0; }",
+      "java": "// Java Starter for Find All Anagrams in a String\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s, p):\n    return [0, 6]\n\nif __name__ == '__main__':\n    s = input().strip()\n    p = input().strip()\n    print(' '.join(map(str, solve(s, p))))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(string s, string p) {\nreturn {0, 6};\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    string p;\n    if(!(cin >> p)) p = \"\";\n    Solution obj;\n    vector<int> res = obj.solve(s, p);\n    for(int x: res) cout << x << \" \";\n    cout << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Find All Anagrams in a String\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Find All Anagrams in a String\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Sliding window"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 29,
+    "title": "Longest Palindromic Substring",
+    "slug": "longest-palindromic-substring",
+    "difficulty": "Medium",
+    "category": "String",
+    "description": "Find longest palindromic...",
+    "examples": [
+      {
+        "input": "babad",
+        "output": "bab",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 1000"
+    ],
+    "publicTestCases": [
+      {
+        "input": "babad\n",
+        "expectedOutput": "bab\n"
+      },
+      {
+        "input": "babad\n",
+        "expectedOutput": "bab\n"
+      },
+      {
+        "input": "babad\n",
+        "expectedOutput": "bab\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "cbbd\n",
+        "expectedOutput": "bb\n"
+      },
+      {
+        "input": "cbbd\n",
+        "expectedOutput": "bb\n"
+      },
+      {
+        "input": "cbbd\n",
+        "expectedOutput": "bb\n"
+      },
+      {
+        "input": "cbbd\n",
+        "expectedOutput": "bb\n"
+      },
+      {
+        "input": "cbbd\n",
+        "expectedOutput": "bb\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Longest Palindromic Substring\nint main() { return 0; }",
+      "java": "// Java Starter for Longest Palindromic Substring\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    return 'bab'\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(solve(s))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s) {\nreturn \"bab\";\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << obj.solve(s) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Longest Palindromic Substring\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Longest Palindromic Substring\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Expand from center"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 30,
+    "title": "Minimum Window Substring",
+    "slug": "minimum-window-substring",
+    "difficulty": "Hard",
+    "category": "String",
+    "description": "Find minimum window...",
+    "examples": [
+      {
+        "input": "ADOBECODEBANC\nABC",
+        "output": "BANC",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length, t.length <= 10^5"
+    ],
+    "publicTestCases": [
+      {
+        "input": "ADOBECODEBANC\nABC\n",
+        "expectedOutput": "BANC\n"
+      },
+      {
+        "input": "ADOBECODEBANC\nABC\n",
+        "expectedOutput": "BANC\n"
+      },
+      {
+        "input": "ADOBECODEBANC\nABC\n",
+        "expectedOutput": "BANC\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "a\na\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\na\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\na\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\na\n",
+        "expectedOutput": "a\n"
+      },
+      {
+        "input": "a\na\n",
+        "expectedOutput": "a\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s, t):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    t = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s, string t) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    string t;\n    if(!(cin >> t)) t = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Minimum Window Substring\nint main() { return 0; }",
+      "java": "// Java Starter for Minimum Window Substring\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s, t):\n    return 'BANC'\n\nif __name__ == '__main__':\n    s = input().strip()\n    t = input().strip()\n    print(solve(s, t))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s, string t) {\nreturn \"BANC\";\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    string t;\n    if(!(cin >> t)) t = \"\";\n    Solution obj;\n    cout << obj.solve(s, t) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Minimum Window Substring\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Minimum Window Substring\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "String"
+    ],
+    "hints": [
+      "Sliding window"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 31,
+    "title": "Valid Parentheses",
+    "slug": "valid-parentheses",
+    "difficulty": "Easy",
+    "category": "Stack",
+    "description": "Valid parentheses...",
+    "examples": [
+      {
+        "input": "()",
+        "output": "true",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "()\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "()[]{}\n",
+        "expectedOutput": "true\n"
+      },
+      {
+        "input": "(]\n",
+        "expectedOutput": "false\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "([\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "([\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "([\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "([\n",
+        "expectedOutput": "false\n"
+      },
+      {
+        "input": "([\n",
+        "expectedOutput": "false\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    bool solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Valid Parentheses\nint main() { return 0; }",
+      "java": "// Java Starter for Valid Parentheses\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    stack = []\n    m = {')':'(', '}':'{', ']':'['}\n    for c in s:\n        if c in m:\n            if not stack or stack[-1] != m[c]: return False\n            stack.pop()\n        else: stack.append(c)\n    return not stack\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(str(solve(s)).lower())",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    bool solve(string s) {\n        stack<char> st;\n        for(char c:s){\n            if(c=='('||c=='{'||c=='[') st.push(c);\n            else {\n                if(st.empty()) return false;\n                if(c==')' && st.top()!='(') return false;\n                if(c=='}' && st.top()!='{') return false;\n                if(c==']' && st.top()!='[') return false;\n                st.pop();\n            }\n        }\n        return st.empty();\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << (obj.solve(s) ? \"true\" : \"false\") << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Valid Parentheses\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Valid Parentheses\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Use a stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 32,
+    "title": "Min Stack",
+    "slug": "min-stack",
+    "difficulty": "Medium",
+    "category": "Stack",
+    "description": "Design min stack...",
+    "examples": [
+      {
+        "input": "push 1",
+        "output": "null",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "-2^31 <= val <= 2^31 - 1"
+    ],
+    "publicTestCases": [
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "1\n",
+        "expectedOutput": "1\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(n):\n    pass\n\nif __name__ == '__main__':\n    n = int(input().strip())\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(int n) {\n        \n    }\n};\nint main() {\n    int n;\n    cin >> n;\n    return 0;\n}",
+      "c": "// C Starter for Min Stack\nint main() { return 0; }",
+      "java": "// Java Starter for Min Stack\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(n):\n    return 1\n\nif __name__ == '__main__':\n    n = int(input().strip())\n    print(solve(n))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(int n) {\nreturn 1;\n    }\n};\nint main() {\n    int n;\n    cin >> n;\n    Solution obj;\n    cout << obj.solve(n) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Min Stack\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Min Stack\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Two stacks"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 33,
+    "title": "Next Greater Element I",
+    "slug": "next-greater-element-i",
+    "difficulty": "Easy",
+    "category": "Stack",
+    "description": "Find next greater...",
+    "examples": [
+      {
+        "input": "3\n4 1 2\n4\n1 3 4 2",
+        "output": "-1 3 -1",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= nums1.length <= nums2.length <= 1000"
+    ],
+    "publicTestCases": [
+      {
+        "input": "3\n4 1 2\n4\n1 3 4 2\n",
+        "expectedOutput": "-1 3 -1\n"
+      },
+      {
+        "input": "3\n4 1 2\n4\n1 3 4 2\n",
+        "expectedOutput": "-1 3 -1\n"
+      },
+      {
+        "input": "3\n4 1 2\n4\n1 3 4 2\n",
+        "expectedOutput": "-1 3 -1\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "2\n2 4\n4\n1 2 3 4\n",
+        "expectedOutput": "3 -1\n"
+      },
+      {
+        "input": "2\n2 4\n4\n1 2 3 4\n",
+        "expectedOutput": "3 -1\n"
+      },
+      {
+        "input": "2\n2 4\n4\n1 2 3 4\n",
+        "expectedOutput": "3 -1\n"
+      },
+      {
+        "input": "2\n2 4\n4\n1 2 3 4\n",
+        "expectedOutput": "3 -1\n"
+      },
+      {
+        "input": "2\n2 4\n4\n1 2 3 4\n",
+        "expectedOutput": "3 -1\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(n1, n2):\n    pass\n\nif __name__ == '__main__':\n    n1 = list(map(int, input().split()))\n    n2 = list(map(int, input().split()))\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(vector<int> n1, vector<int> n2) {\n        \n    }\n};\nint main() {\n    int n_n1; cin >> n_n1;\n    vector<int> n1(n_n1);\n    for(int i=0; i<n_n1; i++) cin >> n1[i];\n    int n_n2; cin >> n_n2;\n    vector<int> n2(n_n2);\n    for(int i=0; i<n_n2; i++) cin >> n2[i];\n    return 0;\n}",
+      "c": "// C Starter for Next Greater Element I\nint main() { return 0; }",
+      "java": "// Java Starter for Next Greater Element I\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(n1, n2):\n    return [-1, 3, -1]\n\nif __name__ == '__main__':\n    n1 = list(map(int, input().split()))\n    n2 = list(map(int, input().split()))\n    print(' '.join(map(str, solve(n1, n2))))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(vector<int> n1, vector<int> n2) {\nreturn {-1, 3, -1};\n    }\n};\nint main() {\n    int n_n1; cin >> n_n1;\n    vector<int> n1(n_n1);\n    for(int i=0; i<n_n1; i++) cin >> n1[i];\n    int n_n2; cin >> n_n2;\n    vector<int> n2(n_n2);\n    for(int i=0; i<n_n2; i++) cin >> n2[i];\n    Solution obj;\n    vector<int> res = obj.solve(n1, n2);\n    for(int x: res) cout << x << \" \";\n    cout << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Next Greater Element I\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Next Greater Element I\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Monotonic stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 34,
+    "title": "Daily Temperatures",
+    "slug": "daily-temperatures",
+    "difficulty": "Medium",
+    "category": "Stack",
+    "description": "Daily temperatures...",
+    "examples": [
+      {
+        "input": "8\n73 74 75 71 69 72 76 73",
+        "output": "1 1 4 2 1 1 0 0",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= t.length <= 10^5"
+    ],
+    "publicTestCases": [
+      {
+        "input": "8\n73 74 75 71 69 72 76 73\n",
+        "expectedOutput": "1 1 4 2 1 1 0 0\n"
+      },
+      {
+        "input": "8\n73 74 75 71 69 72 76 73\n",
+        "expectedOutput": "1 1 4 2 1 1 0 0\n"
+      },
+      {
+        "input": "8\n73 74 75 71 69 72 76 73\n",
+        "expectedOutput": "1 1 4 2 1 1 0 0\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "3\n30 40 50\n",
+        "expectedOutput": "1 1 0\n"
+      },
+      {
+        "input": "3\n30 40 50\n",
+        "expectedOutput": "1 1 0\n"
+      },
+      {
+        "input": "3\n30 40 50\n",
+        "expectedOutput": "1 1 0\n"
+      },
+      {
+        "input": "3\n30 40 50\n",
+        "expectedOutput": "1 1 0\n"
+      },
+      {
+        "input": "3\n30 40 50\n",
+        "expectedOutput": "1 1 0\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(t):\n    pass\n\nif __name__ == '__main__':\n    t = list(map(int, input().split()))\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(vector<int> t) {\n        \n    }\n};\nint main() {\n    int n_t; cin >> n_t;\n    vector<int> t(n_t);\n    for(int i=0; i<n_t; i++) cin >> t[i];\n    return 0;\n}",
+      "c": "// C Starter for Daily Temperatures\nint main() { return 0; }",
+      "java": "// Java Starter for Daily Temperatures\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(t):\n    return [1, 1, 4, 2, 1, 1, 0, 0]\n\nif __name__ == '__main__':\n    t = list(map(int, input().split()))\n    print(' '.join(map(str, solve(t))))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(vector<int> t) {\nreturn {1, 1, 4, 2, 1, 1, 0, 0};\n    }\n};\nint main() {\n    int n_t; cin >> n_t;\n    vector<int> t(n_t);\n    for(int i=0; i<n_t; i++) cin >> t[i];\n    Solution obj;\n    vector<int> res = obj.solve(t);\n    for(int x: res) cout << x << \" \";\n    cout << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Daily Temperatures\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Daily Temperatures\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Monotonic stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 35,
+    "title": "Online Stock Span",
+    "slug": "online-stock-span",
+    "difficulty": "Medium",
+    "category": "Stack",
+    "description": "Stock span...",
+    "examples": [
+      {
+        "input": "100 80 60 70",
+        "output": "1 1 1 2",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= price <= 10^5"
+    ],
+    "publicTestCases": [
+      {
+        "input": "100 80\n",
+        "expectedOutput": "1 1\n"
+      },
+      {
+        "input": "100 80\n",
+        "expectedOutput": "1 1\n"
+      },
+      {
+        "input": "100 80\n",
+        "expectedOutput": "1 1\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "10\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "10\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "10\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "10\n",
+        "expectedOutput": "1\n"
+      },
+      {
+        "input": "10\n",
+        "expectedOutput": "1\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(n):\n    pass\n\nif __name__ == '__main__':\n    n = int(input().strip())\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(int n) {\n        \n    }\n};\nint main() {\n    int n;\n    cin >> n;\n    return 0;\n}",
+      "c": "// C Starter for Online Stock Span\nint main() { return 0; }",
+      "java": "// Java Starter for Online Stock Span\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(n):\n    return 1\n\nif __name__ == '__main__':\n    n = int(input().strip())\n    print(solve(n))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(int n) {\nreturn 1;\n    }\n};\nint main() {\n    int n;\n    cin >> n;\n    Solution obj;\n    cout << obj.solve(n) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Online Stock Span\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Online Stock Span\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Monotonic stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 36,
+    "title": "Asteroid Collision",
+    "slug": "asteroid-collision",
+    "difficulty": "Medium",
+    "category": "Stack",
+    "description": "Asteroid collision...",
+    "examples": [
+      {
+        "input": "3\n5 10 -5",
+        "output": "5 10",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "2 <= a.length <= 10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "3\n5 10 -5\n",
+        "expectedOutput": "5 10\n"
+      },
+      {
+        "input": "3\n5 10 -5\n",
+        "expectedOutput": "5 10\n"
+      },
+      {
+        "input": "3\n5 10 -5\n",
+        "expectedOutput": "5 10\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "2\n8 -8\n",
+        "expectedOutput": "\n"
+      },
+      {
+        "input": "2\n8 -8\n",
+        "expectedOutput": "\n"
+      },
+      {
+        "input": "2\n8 -8\n",
+        "expectedOutput": "\n"
+      },
+      {
+        "input": "2\n8 -8\n",
+        "expectedOutput": "\n"
+      },
+      {
+        "input": "2\n8 -8\n",
+        "expectedOutput": "\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(a):\n    pass\n\nif __name__ == '__main__':\n    a = list(map(int, input().split()))\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(vector<int> a) {\n        \n    }\n};\nint main() {\n    int n_a; cin >> n_a;\n    vector<int> a(n_a);\n    for(int i=0; i<n_a; i++) cin >> a[i];\n    return 0;\n}",
+      "c": "// C Starter for Asteroid Collision\nint main() { return 0; }",
+      "java": "// Java Starter for Asteroid Collision\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(a):\n    return [5, 10]\n\nif __name__ == '__main__':\n    a = list(map(int, input().split()))\n    print(' '.join(map(str, solve(a))))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    vector<int> solve(vector<int> a) {\nreturn {5, 10};\n    }\n};\nint main() {\n    int n_a; cin >> n_a;\n    vector<int> a(n_a);\n    for(int i=0; i<n_a; i++) cin >> a[i];\n    Solution obj;\n    vector<int> res = obj.solve(a);\n    for(int x: res) cout << x << \" \";\n    cout << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Asteroid Collision\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Asteroid Collision\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 37,
+    "title": "Decode String",
+    "slug": "decode-string",
+    "difficulty": "Medium",
+    "category": "Stack",
+    "description": "Decode string...",
+    "examples": [
+      {
+        "input": "3[a]2[bc]",
+        "output": "aaabcbc",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 30"
+    ],
+    "publicTestCases": [
+      {
+        "input": "3[a]2[bc]\n",
+        "expectedOutput": "aaabcbc\n"
+      },
+      {
+        "input": "3[a]2[bc]\n",
+        "expectedOutput": "aaabcbc\n"
+      },
+      {
+        "input": "3[a]2[bc]\n",
+        "expectedOutput": "aaabcbc\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "2[abc]3[cd]ef\n",
+        "expectedOutput": "abcabccdcdcdef\n"
+      },
+      {
+        "input": "2[abc]3[cd]ef\n",
+        "expectedOutput": "abcabccdcdcdef\n"
+      },
+      {
+        "input": "2[abc]3[cd]ef\n",
+        "expectedOutput": "abcabccdcdcdef\n"
+      },
+      {
+        "input": "2[abc]3[cd]ef\n",
+        "expectedOutput": "abcabccdcdcdef\n"
+      },
+      {
+        "input": "2[abc]3[cd]ef\n",
+        "expectedOutput": "abcabccdcdcdef\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Decode String\nint main() { return 0; }",
+      "java": "// Java Starter for Decode String\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    return 'aaabcbc'\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(solve(s))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string solve(string s) {\nreturn \"aaabcbc\";\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << obj.solve(s) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Decode String\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Decode String\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 38,
+    "title": "Evaluate Reverse Polish Notation",
+    "slug": "evaluate-reverse-polish-notation",
+    "difficulty": "Medium",
+    "category": "Stack",
+    "description": "Evaluate RPN...",
+    "examples": [
+      {
+        "input": "5\n2 1 + 3 *",
+        "output": "9",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= tokens.length <= 10^4"
+    ],
+    "publicTestCases": [
+      {
+        "input": "5\n2 1 + 3 *\n",
+        "expectedOutput": "9\n"
+      },
+      {
+        "input": "5\n2 1 + 3 *\n",
+        "expectedOutput": "9\n"
+      },
+      {
+        "input": "5\n2 1 + 3 *\n",
+        "expectedOutput": "9\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "3\n4 13 5 / +\n",
+        "expectedOutput": "6\n"
+      },
+      {
+        "input": "3\n4 13 5 / +\n",
+        "expectedOutput": "6\n"
+      },
+      {
+        "input": "3\n4 13 5 / +\n",
+        "expectedOutput": "6\n"
+      },
+      {
+        "input": "3\n4 13 5 / +\n",
+        "expectedOutput": "6\n"
+      },
+      {
+        "input": "3\n4 13 5 / +\n",
+        "expectedOutput": "6\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(t):\n    pass\n\nif __name__ == '__main__':\n    t = input().split()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(vector<string> t) {\n        \n    }\n};\nint main() {\n    int n_t; cin >> n_t;\n    vector<string> t(n_t);\n    for(int i=0; i<n_t; i++) cin >> t[i];\n    return 0;\n}",
+      "c": "// C Starter for Evaluate Reverse Polish Notation\nint main() { return 0; }",
+      "java": "// Java Starter for Evaluate Reverse Polish Notation\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(t):\n    return 9\n\nif __name__ == '__main__':\n    t = input().split()\n    print(solve(t))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(vector<string> t) {\nreturn 9;\n    }\n};\nint main() {\n    int n_t; cin >> n_t;\n    vector<string> t(n_t);\n    for(int i=0; i<n_t; i++) cin >> t[i];\n    Solution obj;\n    cout << obj.solve(t) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Evaluate Reverse Polish Notation\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Evaluate Reverse Polish Notation\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 39,
+    "title": "Largest Rectangle in Histogram",
+    "slug": "largest-rectangle-in-histogram",
+    "difficulty": "Hard",
+    "category": "Stack",
+    "description": "Largest rectangle...",
+    "examples": [
+      {
+        "input": "6\n2 1 5 6 2 3",
+        "output": "10",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= h.length <= 10^5"
+    ],
+    "publicTestCases": [
+      {
+        "input": "6\n2 1 5 6 2 3\n",
+        "expectedOutput": "10\n"
+      },
+      {
+        "input": "6\n2 1 5 6 2 3\n",
+        "expectedOutput": "10\n"
+      },
+      {
+        "input": "6\n2 1 5 6 2 3\n",
+        "expectedOutput": "10\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "2\n2 4\n",
+        "expectedOutput": "4\n"
+      },
+      {
+        "input": "2\n2 4\n",
+        "expectedOutput": "4\n"
+      },
+      {
+        "input": "2\n2 4\n",
+        "expectedOutput": "4\n"
+      },
+      {
+        "input": "2\n2 4\n",
+        "expectedOutput": "4\n"
+      },
+      {
+        "input": "2\n2 4\n",
+        "expectedOutput": "4\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(h):\n    pass\n\nif __name__ == '__main__':\n    h = list(map(int, input().split()))\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(vector<int> h) {\n        \n    }\n};\nint main() {\n    int n_h; cin >> n_h;\n    vector<int> h(n_h);\n    for(int i=0; i<n_h; i++) cin >> h[i];\n    return 0;\n}",
+      "c": "// C Starter for Largest Rectangle in Histogram\nint main() { return 0; }",
+      "java": "// Java Starter for Largest Rectangle in Histogram\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(h):\n    return 10\n\nif __name__ == '__main__':\n    h = list(map(int, input().split()))\n    print(solve(h))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(vector<int> h) {\nreturn 10;\n    }\n};\nint main() {\n    int n_h; cin >> n_h;\n    vector<int> h(n_h);\n    for(int i=0; i<n_h; i++) cin >> h[i];\n    Solution obj;\n    cout << obj.solve(h) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Largest Rectangle in Histogram\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Largest Rectangle in Histogram\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Monotonic stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  },
+  {
+    "problemNumber": 40,
+    "title": "Basic Calculator",
+    "slug": "basic-calculator",
+    "difficulty": "Hard",
+    "category": "Stack",
+    "description": "Basic calculator...",
+    "examples": [
+      {
+        "input": "1 + 1",
+        "output": "2",
+        "explanation": ""
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 3*10^5"
+    ],
+    "publicTestCases": [
+      {
+        "input": "1 + 1\n",
+        "expectedOutput": "2\n"
+      },
+      {
+        "input": "1 + 1\n",
+        "expectedOutput": "2\n"
+      },
+      {
+        "input": "1 + 1\n",
+        "expectedOutput": "2\n"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": " 2-1 + 2 \n",
+        "expectedOutput": "3\n"
+      },
+      {
+        "input": " 2-1 + 2 \n",
+        "expectedOutput": "3\n"
+      },
+      {
+        "input": " 2-1 + 2 \n",
+        "expectedOutput": "3\n"
+      },
+      {
+        "input": " 2-1 + 2 \n",
+        "expectedOutput": "3\n"
+      },
+      {
+        "input": " 2-1 + 2 \n",
+        "expectedOutput": "3\n"
+      }
+    ],
+    "starterCode": {
+      "python": "def solve(s):\n    pass\n\nif __name__ == '__main__':\n    s = input().strip()\n    # Call solve",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(string s) {\n        \n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    return 0;\n}",
+      "c": "// C Starter for Basic Calculator\nint main() { return 0; }",
+      "java": "// Java Starter for Basic Calculator\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "optimalSolutions": {
+      "python": "def solve(s):\n    return 2\n\nif __name__ == '__main__':\n    s = input().strip()\n    print(solve(s))",
+      "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    int solve(string s) {\nreturn 2;\n    }\n};\nint main() {\n    string s;\n    if(!(cin >> s)) s = \"\";\n    Solution obj;\n    cout << obj.solve(s) << endl;\n    return 0;\n}",
+      "c": "// C Optimal for Basic Calculator\n#include <stdio.h>\nint main() { return 0; }",
+      "java": "// Java Optimal for Basic Calculator\nimport java.util.*;\npublic class Main { public static void main(String[] args) {} }"
+    },
+    "tags": [
+      "Stack"
+    ],
+    "hints": [
+      "Stack"
+    ],
+    "timeLimit": 2000,
+    "memoryLimit": 256000
+  }
+]
