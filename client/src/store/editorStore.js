@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { submitCode, getSubmissions } from '../services/executionService';
 import { parseAST } from '../services/astService';
+import { useAuthStore } from './authStore';
 
 export const useEditorStore = create((set, get) => ({
   code: '',
@@ -68,6 +69,10 @@ export const useEditorStore = create((set, get) => ({
       const res = await submitCode({ challengeId, code, language });
       const sub = res.data.submission;
       
+      if (sub.status === 'Accepted') {
+        useAuthStore.getState().addSolvedChallenge(challengeId);
+      }
+
       // Update our cache with the new submission so switching away and back preserves it
       const newSubs = [sub, ...submissionsCache.filter(s => s._id !== sub._id)];
 

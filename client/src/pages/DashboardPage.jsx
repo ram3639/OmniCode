@@ -41,14 +41,14 @@ export default function DashboardPage() {
     fetchProgress();
   }, []);
 
-  const totalSolved = stats?.completedChallenges?.length || 0;
-  const totalSubmissions = stats?.totalSubmissions || 0;
+  const totalSolved = stats?.totalSolved || 0;
+  const totalSubmissions = stats?.totalAttempted || 0;
   const accuracy = totalSubmissions > 0 ? Math.round((totalSolved / totalSubmissions) * 100) : 0;
 
   const animSolved = useCountUp(totalSolved, 1200, !loading);
-  const animStreak = useCountUp(stats?.streakDays || 0, 1200, !loading);
+  const animStreak = useCountUp(stats?.currentStreak || 0, 1200, !loading);
   const animAccuracy = useCountUp(accuracy, 1200, !loading);
-  const animXp = useCountUp(stats?.totalXp || 0, 1500, !loading);
+  const animXp = useCountUp(totalSolved * 50, 1500, !loading); // 50 XP per solved problem
 
   const statCards = [
     { label: 'Problems Solved', value: animSolved, icon: <Target size={20} /> },
@@ -147,15 +147,15 @@ export default function DashboardPage() {
             <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', padding: '24px', border: '1px solid rgba(255,255,255,0.02)', overflowY: 'auto' }}>
               {loading ? (
                 <div style={{ color: 'var(--text-muted)', fontSize: '14px', textAlign: 'center', marginTop: '40px' }}>Loading...</div>
-              ) : stats?.topicProgress && Object.keys(stats.topicProgress).length > 0 ? (
+              ) : stats?.topicStats && stats.topicStats.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {Object.entries(stats.topicProgress).map(([topic, data]) => {
-                    const pct = data.total > 0 ? Math.round((data.solved / data.total) * 100) : 0;
+                  {stats.topicStats.map((data) => {
+                    const pct = data.attempted > 0 ? Math.round((data.solved / data.attempted) * 100) : 0;
                     return (
-                      <div key={topic}>
+                      <div key={data.topic}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                          <span style={{ fontWeight: 500, color: 'var(--text-primary)', fontSize: '13px' }}>{topic}</span>
-                          <span style={{ color: 'var(--text-muted)', fontSize: '12px', fontFamily: "'JetBrains Mono', monospace" }}>{data.solved}/{data.total}</span>
+                          <span style={{ fontWeight: 500, color: 'var(--text-primary)', fontSize: '13px' }}>{data.topic}</span>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '12px', fontFamily: "'JetBrains Mono', monospace" }}>{data.solved}/{data.attempted}</span>
                         </div>
                         <div style={{ height: '6px', backgroundColor: 'var(--bg-primary)', borderRadius: '3px', overflow: 'hidden' }}>
                           <div style={{ height: '100%', width: `${pct}%`, backgroundColor: '#84848c', borderRadius: '3px', transition: 'width 1s cubic-bezier(0.16, 1, 0.3, 1)' }} />

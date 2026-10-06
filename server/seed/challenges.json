@@ -1507,12 +1507,12 @@
     "slug": "valid-palindrome",
     "difficulty": "Easy",
     "category": "String",
-    "description": "Given the input for the **Valid Palindrome** problem, return the correct output according to the standard problem rules.\n\nYou may assume that each input would have **exactly one solution**, and you may not use the same element twice.\n\nYou can return the answer in any order.\n\n**Example 1:**\n```\nInput: A man\nOutput: true\n```\n\n**Example 2:**\n```\nInput: race\nOutput: false\n```\n\n**Example 3:**\n```\nInput: \nOutput: true\n```\n\n**Constraints:**\n- 1 <= input.length <= 10^4\n- -10^9 <= values <= 10^9\n- Only one valid answer exists.\n\n**Follow-up:** Can you come up with an algorithm that is less than O(n^2) time complexity?",
+    "description": "Given the input for the **Valid Palindrome** problem, return the correct output according to the standard problem rules.\n\nA phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.\n\n**Example 1:**\n```\nInput: A man, a plan, a canal: Panama\nOutput: true\n```\n\n**Example 2:**\n```\nInput: race a car\nOutput: false\n```\n\n**Example 3:**\n```\nInput: \nOutput: true\n```\n\n**Constraints:**\n- 1 <= s.length <= 2*10^5\n- s consists only of printable ASCII characters.",
     "examples": [
       {
-        "input": "A man",
+        "input": "A man, a plan, a canal: Panama",
         "output": "true",
-        "explanation": ""
+        "explanation": "\"amanaplanacanalpanama\" is a palindrome."
       }
     ],
     "constraints": [
@@ -1520,11 +1520,11 @@
     ],
     "publicTestCases": [
       {
-        "input": "A man\n",
+        "input": "A man, a plan, a canal: Panama\n",
         "expectedOutput": "true\n"
       },
       {
-        "input": "race\n",
+        "input": "race a car\n",
         "expectedOutput": "false\n"
       },
       {

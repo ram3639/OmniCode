@@ -37,6 +37,17 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  addSolvedChallenge: (challengeId) => set((state) => {
+    if (!state.user) return state;
+    if (state.user.solvedChallenges?.includes(challengeId)) return state;
+    return {
+      user: {
+        ...state.user,
+        solvedChallenges: [...(state.user.solvedChallenges || []), challengeId]
+      }
+    };
+  }),
+
   logout: () => {
     localStorage.removeItem('omnicode_token');
     set({ user: null, token: null, isAuthenticated: false, error: null });

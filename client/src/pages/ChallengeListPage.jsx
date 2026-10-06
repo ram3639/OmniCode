@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useChallengeStore } from '../store/challengeStore';
+import { useAuthStore } from '../store/authStore';
 import { Search, Check, Circle } from 'lucide-react';
 
 export default function ChallengeListPage() {
   const { challenges, fetchChallenges, filters, setFilter, loading, error } = useChallengeStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     fetchChallenges(filters);
@@ -92,13 +94,14 @@ export default function ChallengeListPage() {
             <tbody>
               {challenges.map((c) => {
                 const diffStyle = getDifficultyStyle(c.difficulty);
+                const isSolved = user?.solvedChallenges?.includes(c._id);
                 return (
                   <tr key={c._id} style={{ borderBottom: '1px solid rgba(42,39,48,0.5)', transition: 'background-color 0.15s' }}
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <td style={{ padding: '14px 20px' }}>
-                      {c.solved ? <Check size={16} style={{ color: '#5fb3a1' }} /> : <Circle size={16} style={{ color: 'var(--border-secondary)' }} />}
+                      {isSolved ? <Check size={16} style={{ color: '#5fb3a1' }} /> : <Circle size={16} style={{ color: 'var(--border-secondary)' }} />}
                     </td>
                     <td style={{ padding: '14px 20px' }}>
                       <Link to={`/challenge/${c.slug}`} style={{

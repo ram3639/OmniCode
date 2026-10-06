@@ -26,25 +26,27 @@ export default function ProgressPage() {
   if (error) return <div style={{ height: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>{error}</div>;
   if (!stats) return null;
 
-  const totalSolved = stats.completedChallenges?.length || 0;
-  const accuracy = stats.totalSubmissions > 0 
-    ? Math.round((totalSolved / stats.totalSubmissions) * 100) 
+  const totalSolved = stats.totalSolved || 0;
+  const totalSubmissions = stats.totalAttempted || 0;
+  const accuracy = totalSubmissions > 0 
+    ? Math.round((totalSolved / totalSubmissions) * 100) 
     : 0;
 
-  const currentLevel = Math.floor((stats.totalXp || 0) / 100) + 1;
+  const totalXp = totalSolved * 50;
+  const currentLevel = Math.floor(totalXp / 100) + 1;
   const nextLevelXp = currentLevel * 100;
-  const xpProgress = ((stats.totalXp || 0) % 100);
+  const xpProgress = (totalXp % 100);
 
   // --- LeetCode Heatmap Data Processing ---
   const activityMap = {};
   const availableYears = new Set();
-  if (stats.completedChallenges) {
-    stats.completedChallenges.forEach(ch => {
-      if (!ch.completedAt) return;
+  if (stats.recentSubmissions) {
+    stats.recentSubmissions.forEach(sub => {
+      if (!sub.submittedAt) return;
       try {
-        const dStr = new Date(ch.completedAt).toISOString().split('T')[0];
+        const dStr = new Date(sub.submittedAt).toISOString().split('T')[0];
         activityMap[dStr] = (activityMap[dStr] || 0) + 1;
-        availableYears.add(new Date(ch.completedAt).getFullYear());
+        availableYears.add(new Date(sub.submittedAt).getFullYear());
       } catch (e) {}
     });
   }
@@ -130,7 +132,7 @@ export default function ProgressPage() {
           
           <div style={{ width: '100%', marginTop: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}>
-              <span>{stats.totalXp || 0} XP</span>
+              <span>{totalXp || 0} XP</span>
               <span>{nextLevelXp} XP</span>
             </div>
             <div style={{ height: '6px', width: '100%', backgroundColor: 'var(--bg-primary)', borderRadius: '3px', overflow: 'hidden' }}>
@@ -150,7 +152,7 @@ export default function ProgressPage() {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--text-muted)', borderTop: '1px solid var(--border-primary)', paddingTop: '16px', fontWeight: 500 }}>
             <span><strong style={{color: 'var(--text-primary)'}}>{totalSolved}</strong> Solved</span>
-            <span><strong style={{color: 'var(--text-primary)'}}>{stats.totalSubmissions || 0}</strong> Attempted</span>
+            <span><strong style={{color: 'var(--text-primary)'}}>{totalSubmissions || 0}</strong> Attempted</span>
           </div>
         </div>
       </div>
@@ -167,7 +169,7 @@ export default function ProgressPage() {
               <Flame size={32} color="#ef4444" />
             </div>
             <div>
-              <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-1px' }}>{stats.streakDays || 0}</div>
+              <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-1px' }}>{stats.currentStreak || 0}</div>
               <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '6px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Day Streak</div>
             </div>
           </div>
@@ -178,7 +180,7 @@ export default function ProgressPage() {
               <Terminal size={32} color="#3b82f6" />
             </div>
             <div>
-              <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-1px' }}>{stats.totalSubmissions || 0}</div>
+              <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-1px' }}>{totalSubmissions || 0}</div>
               <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '6px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Code Executions</div>
             </div>
           </div>
@@ -279,18 +281,18 @@ export default function ProgressPage() {
             <Clock size={16} /> Recent Submissions
           </h3>
           <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', paddingRight: '8px' }}>
-            {stats.completedChallenges?.slice(0, 10).map((ch, i) => (
+            {stats.recentSubmissions?.slice(0, 10).map((ch, i) => (
                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                      <div style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Check size={18} /></div>
                      <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>{ch.challengeId || 'Challenge Completed'}</div>
                   </div>
                   <div style={{ color: 'var(--text-muted)', fontSize: '12px', fontWeight: 500 }}>
-                    {new Date(ch.completedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    {new Date(ch.submittedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                   </div>
                </div>
             ))}
-            {(!stats.completedChallenges || stats.completedChallenges.length === 0) && (
+            {(!stats.recentSubmissions || stats.recentSubmissions.length === 0) && (
               <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '16px 0', fontSize: '13px' }}>
                 No recent submissions found. Start coding!
               </div>

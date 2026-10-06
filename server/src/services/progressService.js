@@ -4,7 +4,7 @@ import Challenge from '../models/Challenge.js';
 /**
  * Update user's progress after a submission
  */
-export const updateProgress = async (userId, submission, challenge) => {
+export const updateProgress = async (userId, submission, challenge, isFirstTimeSolve = false) => {
   try {
     let progress = await Progress.findOne({ userId });
     
@@ -30,15 +30,18 @@ export const updateProgress = async (userId, submission, challenge) => {
     topicStat.lastAttempted = new Date();
 
     if (submission.status === 'Accepted') {
-      progress.totalSolved += 1;
-      topicStat.solved += 1;
+      if (isFirstTimeSolve) {
+        progress.totalSolved += 1;
+        topicStat.solved += 1;
+      }
       
       // Update moving averages
+      const solvedCount = Math.max(1, topicStat.solved);
       if (submission.runtime) {
-        topicStat.avgRuntime = (topicStat.avgRuntime * (topicStat.solved - 1) + submission.runtime) / topicStat.solved;
+        topicStat.avgRuntime = (topicStat.avgRuntime * (solvedCount - 1) + submission.runtime) / solvedCount;
       }
       if (submission.memory) {
-        topicStat.avgMemory = (topicStat.avgMemory * (topicStat.solved - 1) + submission.memory) / topicStat.solved;
+        topicStat.avgMemory = (topicStat.avgMemory * (solvedCount - 1) + submission.memory) / solvedCount;
       }
     }
 

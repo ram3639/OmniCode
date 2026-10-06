@@ -1,5 +1,6 @@
 import Submission from '../models/Submission.js';
 import Challenge from '../models/Challenge.js';
+import User from '../models/User.js';
 import { submitBatch, pollResults, mapLanguageId, parseResult } from '../services/judge0Service.js';
 import { getSimilarityScore } from '../services/microserviceProxy.js';
 import { getOptimizationHint } from '../services/geminiService.js';
@@ -153,12 +154,21 @@ export const submitCode = async (req, res) => {
       aiHints
     });
 
+    let isFirstTimeSolve = false;
     challenge.totalSubmissions += 1;
-    if (finalStatus === 'Accepted') challenge.acceptedSubmissions += 1;
+    if (finalStatus === 'Accepted') {
+      challenge.acceptedSubmissions += 1;
+      const submittingUser = await User.findById(userId);
+      if (submittingUser && !submittingUser.solvedChallenges.includes(challengeId)) {
+        submittingUser.solvedChallenges.push(challengeId);
+        await submittingUser.save();
+        isFirstTimeSolve = true;
+      }
+    }
     await challenge.save();
 
     try {
-      await updateProgress(userId, submission, challenge);
+      await updateProgress(userId, submission, challenge, isFirstTimeSolve);
     } catch (err) {
       console.error('Progress update error:', err.message);
     }
