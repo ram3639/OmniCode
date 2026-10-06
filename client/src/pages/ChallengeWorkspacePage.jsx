@@ -14,7 +14,7 @@ export default function ChallengeWorkspacePage() {
     code, 
     language, 
     setLanguage, 
-    loadStarterCode, 
+    loadWorkspace, 
     runCode, 
     isRunning, 
     reset 
@@ -28,9 +28,9 @@ export default function ChallengeWorkspacePage() {
 
   useEffect(() => {
     if (currentChallenge) {
-      loadStarterCode(currentChallenge.starterCode, language);
+      loadWorkspace(currentChallenge._id, currentChallenge.starterCode, language);
     }
-  }, [currentChallenge, language]);
+  }, [currentChallenge]);
 
   const handleRun = () => {
     if (currentChallenge) {

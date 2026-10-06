@@ -28,6 +28,13 @@ const seedDatabase = async () => {
   try {
     await connectDB();
 
+    const existingUsers = await User.countDocuments();
+    if (existingUsers > 0) {
+      console.log('Database is already seeded (found existing users). Skipping seed script to prevent data loss.');
+      console.log('If you want to force a reset, you must manually clear the database first.');
+      process.exit(0);
+    }
+
     console.log('Clearing database...');
     await User.deleteMany({});
     await Challenge.deleteMany({});

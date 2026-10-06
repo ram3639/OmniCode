@@ -63,14 +63,11 @@ export const submitCode = async (req, res) => {
       source_code: Buffer.from(processedCode).toString('base64'),
       stdin: Buffer.from((tc.input || '').trim() + '\n').toString('base64'),
       expected_output: Buffer.from((tc.expectedOutput || '').trim() + '\n').toString('base64'),
-      memory_limit: isJava ? 1024000 : 512000,
-      stack_limit: isJava ? 128000 : 64000,
-      max_processes_and_or_threads: isJava ? 256 : 60,
+      memory_limit: isJava ? 8192000 : 512000,
+      stack_limit: isJava ? 8192 : 65536,
+      max_processes_and_or_threads: isJava ? 1024 : 120,
       enable_per_process_and_thread_memory_limit: true,
-      enable_per_process_and_thread_time_limit: true,
-      ...(isJava && {
-        compiler_options: '-J-XX:+UseSerialGC -J-XX:MaxMetaspaceSize=128m -J-XX:CompressedClassSpaceSize=32m'
-      })
+      enable_per_process_and_thread_time_limit: true
     }));
 
     const batchResponse = await submitBatch(judge0Submissions);
