@@ -49,7 +49,7 @@ export default function ChallengeWorkspacePage() {
   const languages = ['python', 'cpp', 'c', 'java'];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 56px)', backgroundColor: 'var(--bg-primary)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', backgroundColor: 'transparent' }}>
       {/* Header bar */}
       <div style={{ 
         height: '48px', 

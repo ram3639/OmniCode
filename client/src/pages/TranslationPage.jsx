@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import api from '../services/api';
-import { Languages, ArrowRight, Copy, Check } from 'lucide-react';
+import { Languages, ArrowRight, Copy, Check, Sparkles, Code2 } from 'lucide-react';
 
 const HELLO_WORLD = {
   python: `# Hello World in Python\ndef greet(name):\n    return f"Hello, {name}!"\n\nif __name__ == "__main__":\n    message = greet("World")\n    print(message)\n`,
@@ -174,20 +174,7 @@ export default function TranslationPage() {
   }, [getHighlight, hasTranslation]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 48px)', backgroundColor: 'var(--bg-primary)' }}>
-      {/* Header */}
-      <div style={{ height: '44px', borderBottom: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontWeight: 600, fontSize: '13px' }}>
-          <Languages size={16} />
-          Code Translator
-          {hasTranslation && <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 400, marginLeft: '8px' }}>Hover a line to see its translation</span>}
-        </div>
-        <button onClick={handleTranslate} disabled={isTranslating || !sourceCode.trim() || sourceLang === targetLang}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 14px', backgroundColor: 'var(--accent)', color: '#000', fontWeight: 600, fontSize: '12px', borderRadius: '4px', border: 'none', cursor: (isTranslating || !sourceCode.trim() || sourceLang === targetLang) ? 'not-allowed' : 'pointer', opacity: (isTranslating || !sourceCode.trim() || sourceLang === targetLang) ? 0.5 : 1 }}>
-          {isTranslating ? 'Translating...' : 'Translate'}
-        </button>
-      </div>
-
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', backgroundColor: 'transparent' }}>
       {error && (
         <div style={{ padding: '6px 14px', backgroundColor: 'rgba(248,113,113,0.1)', color: '#ef4444', fontSize: '12px', borderBottom: '1px solid rgba(248,113,113,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>{error}</span>
@@ -198,16 +185,44 @@ export default function TranslationPage() {
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Source Panel */}
         <div style={{ width: '50%', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border-primary)' }}>
-          <div style={{ padding: '5px 12px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Source</span>
+          <div style={{ padding: '12px 16px', backgroundColor: '#0d0d0d', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Source</span>
               <button onClick={() => setEditMode(!editMode)}
-                style={{ padding: '2px 8px', borderRadius: '3px', border: '1px solid var(--border-primary)', background: editMode ? 'rgba(196,149,106,0.15)' : 'transparent', color: editMode ? 'var(--accent)' : 'var(--text-muted)', cursor: 'pointer', fontSize: '10px' }}>
-                {editMode ? 'Done' : 'Edit'}
+                style={{ 
+                  padding: '6px 14px', 
+                  backgroundColor: editMode ? 'var(--bg-primary)' : 'rgba(196,149,106,0.08)', 
+                  color: editMode ? 'var(--text-secondary)' : 'var(--accent)', 
+                  border: editMode ? '1px solid var(--border-primary)' : '1px solid rgba(196,149,106,0.3)', 
+                  borderRadius: '6px', 
+                  cursor: 'pointer', 
+                  fontSize: '12px', 
+                  fontWeight: 500,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px',
+                  transition: 'all 0.2s'
+                }}>
+                {editMode ? <Check size={14} /> : <Code2 size={14} />}
+                {editMode ? 'Done Editing' : 'Edit Code'}
               </button>
             </div>
             <select value={sourceLang} onChange={(e) => handleSourceLangChange(e.target.value)}
-              style={{ padding: '3px 8px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: '4px', fontSize: '11px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer' }}>
+              style={{ 
+                padding: '8px 36px 8px 14px', 
+                backgroundColor: 'var(--bg-secondary)', 
+                border: '1px solid var(--border-primary)', 
+                borderRadius: '8px', 
+                color: 'var(--text-primary)', 
+                outline: 'none', 
+                cursor: 'pointer', 
+                fontSize: '13px',
+                appearance: 'none', 
+                backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cdcecf%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")',
+                backgroundRepeat: 'no-repeat', 
+                backgroundPosition: 'right 12px top 50%',
+                backgroundSize: '10px auto'
+              }}>
               {languages.map(l => <option key={l} value={l}>{l.toUpperCase()}</option>)}
             </select>
           </div>
@@ -230,21 +245,42 @@ export default function TranslationPage() {
 
         {/* Target Panel */}
         <div style={{ width: '50%', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '5px 12px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+          <div style={{ padding: '12px 16px', backgroundColor: '#0d0d0d', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ArrowRight style={{ color: 'var(--text-muted)' }} size={14} />
-              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Target</span>
+              <ArrowRight style={{ color: 'var(--text-muted)' }} size={16} />
+              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Target</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               {translatedCode && (
-                <button onClick={copyToClipboard} style={{ padding: '3px', color: 'var(--text-secondary)', background: 'none', border: 'none', cursor: 'pointer' }} title="Copy">
+                <button onClick={copyToClipboard} style={{ padding: '6px 14px', color: 'var(--text-primary)', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 500, transition: 'all 0.2s' }}>
                   {copied ? <Check size={14} style={{ color: '#4CAF50' }} /> : <Copy size={14} />}
+                  {copied ? 'Copied!' : 'Copy Code'}
                 </button>
               )}
               <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)}
-                style={{ padding: '3px 8px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: '4px', fontSize: '11px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer' }}>
+                style={{ 
+                  padding: '8px 36px 8px 14px', 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  border: '1px solid var(--border-primary)', 
+                  borderRadius: '8px', 
+                  color: 'var(--accent)', 
+                  outline: 'none', 
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  appearance: 'none', 
+                  backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235227FF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")',
+                  backgroundRepeat: 'no-repeat', 
+                  backgroundPosition: 'right 12px top 50%',
+                  backgroundSize: '10px auto'
+                }}>
                 {languages.map(l => <option key={l} value={l}>{l.toUpperCase()}</option>)}
               </select>
+              <button onClick={handleTranslate} disabled={isTranslating || !sourceCode.trim() || sourceLang === targetLang}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 20px', backgroundColor: 'var(--accent)', color: '#000', fontWeight: 600, fontSize: '13px', borderRadius: '6px', border: 'none', cursor: (isTranslating || !sourceCode.trim() || sourceLang === targetLang) ? 'not-allowed' : 'pointer', opacity: (isTranslating || !sourceCode.trim() || sourceLang === targetLang) ? 0.7 : 1, transition: 'all 0.2s' }}>
+                <Sparkles size={14} />
+                {isTranslating ? 'Translating...' : 'Translate'}
+              </button>
             </div>
           </div>
           {renderLinePanel(targetLines, 'target')}

@@ -1,129 +1,140 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { Code2, Zap, Shield, ArrowRight } from 'lucide-react';
+import LightRays from '../components/effects/LightRays';
+import StrokeText from '../components/effects/StrokeText';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
+    if (isAuthenticated) navigate('/dashboard');
   }, [isAuthenticated, navigate]);
 
   return (
     <div style={{
-      minHeight: '100vh',
+      height: '100vh',
+      backgroundColor: '#0a0a0c',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'var(--bg-primary)',
-      padding: '24px',
       position: 'relative',
       overflow: 'hidden',
     }}>
-      <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-        {/* Logo */}
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '72px',
-          height: '72px',
-          borderRadius: '20px',
-          backgroundColor: 'var(--accent)',
-          marginBottom: '24px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        }}>
-          <span style={{ fontSize: '32px', fontWeight: 800, color: '#fff' }}>O</span>
+      {/* REAL ReactBits LightRays with mouse tracking */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <LightRays
+          raysColor="#cdcecf"
+          raysOrigin="top-center"
+          raysSpeed={0.6}
+          lightSpread={1.2}
+          rayLength={2.5}
+          followMouse={true}
+          mouseInfluence={0.15}
+          fadeDistance={0.9}
+          saturation={0.3}
+        />
+      </div>
+
+      {/* Bottom gradient fade */}
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '40%',
+        background: 'linear-gradient(to top, #0a0a0c 0%, transparent 100%)',
+        zIndex: 1,
+        pointerEvents: 'none',
+      }} />
+
+      {/* Content */}
+      <div style={{
+        position: 'relative',
+        zIndex: 2,
+        textAlign: 'center',
+        maxWidth: '800px',
+        padding: '0 24px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        
+        <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+          <StrokeText
+            text="OMNICODE"
+            fontSize={72}
+            strokeWidth={1.5}
+            strokeColor="#84848c"
+            fillColor="#ffffff"
+            drawDuration={1.2}
+            fillDelay={0.2}
+            letterSpacing={4}
+            fontWeight={700}
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          />
         </div>
 
         <h1 style={{
-          fontSize: 'clamp(40px, 8vw, 72px)',
-          fontWeight: 800,
-          color: 'var(--text-primary)',
-          letterSpacing: '-2px',
+          fontSize: 'clamp(40px, 8vw, 64px)',
+          fontWeight: 600,
+          fontFamily: "'Space Grotesk', sans-serif",
+          letterSpacing: '-1.5px',
           lineHeight: 1.1,
-          marginBottom: '16px',
+          color: 'var(--text-primary)',
+          marginBottom: '24px',
         }}>
-          OMNICODE
+          Master the art of code
         </h1>
 
         <p style={{
           fontSize: '18px',
           color: 'var(--text-secondary)',
-          marginBottom: '40px',
+          lineHeight: 1.7,
+          marginBottom: '48px',
           maxWidth: '480px',
-          margin: '0 auto 40px',
-          lineHeight: 1.6,
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}>
-          The intelligent platform for modern coding mastery. Practice, visualize, and translate code — all in one place.
+          Practice challenges, visualize algorithms, and translate code across languages.
         </p>
 
-        {/* CTA Buttons */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center', marginBottom: '64px' }}>
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
           <Link to="/register" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
             padding: '14px 32px',
-            borderRadius: '12px',
-            backgroundColor: 'var(--accent)',
-            color: '#fff',
+            borderRadius: '100px',
+            backgroundColor: '#fff',
+            color: '#0a0a0c',
             fontWeight: 600,
             fontSize: '15px',
             textDecoration: 'none',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
-            transition: 'transform 0.2s, box-shadow 0.2s',
+            transition: 'opacity 0.2s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.15)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)'; }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
           >
-            Get Started <ArrowRight size={18} />
+            Get started
           </Link>
           <Link to="/login" style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
             padding: '14px 32px',
-            borderRadius: '12px',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-primary)',
-            color: 'var(--text-primary)',
-            fontWeight: 600,
+            borderRadius: '100px',
+            backgroundColor: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            color: 'var(--text-secondary)',
+            fontWeight: 500,
             fontSize: '15px',
             textDecoration: 'none',
-            transition: 'background-color 0.2s',
+            transition: 'all 0.2s',
           }}
-          onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
-          onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--bg-secondary)'}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = '#fff'; }}
+          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
           >
-            Sign In
+            Sign in
           </Link>
-        </div>
-
-        {/* Feature Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
-          {[
-            { icon: <Code2 size={24} />, title: '50+ Challenges', desc: 'Arrays, Trees, DP & more' },
-            { icon: <Zap size={24} />, title: 'Live Execution', desc: 'Judge0 powered sandbox' },
-            { icon: <Shield size={24} />, title: 'AST Visualizer', desc: 'See how code parses' },
-          ].map((f, i) => (
-            <div key={i} style={{
-              padding: '24px 20px',
-              backgroundColor: 'var(--bg-secondary)',
-              border: '1px solid var(--border-primary)',
-              borderRadius: '12px',
-              textAlign: 'center',
-            }}>
-              <div style={{ color: 'var(--accent)', marginBottom: '12px', display: 'flex', justifyContent: 'center' }}>{f.icon}</div>
-              <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '6px' }}>{f.title}</h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{f.desc}</p>
-            </div>
-          ))}
         </div>
       </div>
     </div>

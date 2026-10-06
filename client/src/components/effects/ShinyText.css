@@ -1,0 +1,27 @@
+.shiny-text {
+  color: transparent;
+  background: linear-gradient(
+    120deg,
+    rgba(132, 132, 140, 1) 30%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(132, 132, 140, 1) 70%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
+}

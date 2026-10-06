@@ -18,6 +18,7 @@ import ProgressPage from './pages/ProgressPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import PlaygroundPage from './pages/PlaygroundPage';
+import Grainient from './components/effects/Grainient';
 
 function App() {
   const { checkAuth, isAuthenticated, initialLoading } = useAuthStore();
@@ -42,25 +43,42 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-primary)' }}>
-        {isAuthenticated && <Navbar />}
-        <Routes>
-          <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />} />
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
-          <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
-          <Route path="/auth/callback" element={<AuthCallbackPage />} />
-          
-          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/challenges" element={<ProtectedRoute><ChallengeListPage /></ProtectedRoute>} />
-          <Route path="/challenge/:slug" element={<ProtectedRoute><ChallengeWorkspacePage /></ProtectedRoute>} />
-          <Route path="/translate" element={<ProtectedRoute><TranslationPage /></ProtectedRoute>} />
-          <Route path="/visualize" element={<ProtectedRoute><VisualizePage /></ProtectedRoute>} />
-          <Route path="/playground" element={<ProtectedRoute><PlaygroundPage /></ProtectedRoute>} />
-          <Route path="/progress" element={<ProtectedRoute><ProgressPage /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          
-          <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
-        </Routes>
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}>
+        {isAuthenticated && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+            <Grainient
+              color1="#000000"
+              color2="#030305"
+              color3="#0a0a0f"
+              timeSpeed={0.3}
+              grainAmount={0.015}
+              contrast={1.0}
+              zoom={1.2}
+            />
+          </div>
+        )}
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+          {isAuthenticated && <Navbar />}
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <Routes>
+            <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />} />
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
+            <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
+            <Route path="/auth/callback" element={<AuthCallbackPage />} />
+            
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/challenges" element={<ProtectedRoute><ChallengeListPage /></ProtectedRoute>} />
+            <Route path="/challenge/:slug" element={<ProtectedRoute><ChallengeWorkspacePage /></ProtectedRoute>} />
+            <Route path="/translate" element={<ProtectedRoute><TranslationPage /></ProtectedRoute>} />
+            <Route path="/visualize" element={<ProtectedRoute><VisualizePage /></ProtectedRoute>} />
+            <Route path="/playground" element={<ProtectedRoute><PlaygroundPage /></ProtectedRoute>} />
+            <Route path="/progress" element={<ProtectedRoute><ProgressPage /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            
+            <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
+            </Routes>
+          </div>
+        </div>
       </div>
     </BrowserRouter>
   );

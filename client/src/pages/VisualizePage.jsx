@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpDown, Search, Layers, ListOrdered, Link2, GitBranch, Share2, Map, RefreshCw, BarChart3, Type, Undo2, Timer, Network, Grid3x3, Droplets, Gamepad2, Disc } from 'lucide-react';
+import { ArrowUpDown, Search, Layers, ListOrdered, Link2, GitBranch, Share2, Map, RefreshCw, BarChart3, Type, Undo2, Timer, Network, Grid3x3, Droplets, Gamepad2, Disc, Menu } from 'lucide-react';
 import SortingVisualizer from '../components/visualizer/SortingVisualizer';
 import DataStructureVisualizer from '../components/visualizer/DataStructureVisualizer';
 import SearchingVisualizer from '../components/visualizer/SearchingVisualizer';
@@ -46,37 +46,95 @@ const CATEGORIES = [
 
 export default function VisualizePage() {
   const [activeTab, setActiveTab] = useState(CATEGORIES[0].id);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const ActiveComponent = CATEGORIES.find((c) => c && c.id === activeTab)?.component || SortingVisualizer;
 
+  const showSidebar = isExpanded || isHovered;
+
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 48px)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+    <div style={{ display: 'flex', height: 'calc(100vh - 64px)', backgroundColor: 'transparent', color: 'var(--text-primary)' }}>
       {/* Sidebar */}
-      <div style={{ width: '190px', flexShrink: 0, borderRight: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', overflowY: 'auto', padding: '8px 0' }}>
-        <div style={{ padding: '8px 16px 10px', fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
-          Visualizers
+      <div 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{ 
+          width: showSidebar ? '200px' : '56px', 
+          flexShrink: 0, 
+          borderRight: '1px solid var(--border-primary)', 
+          backgroundColor: 'var(--bg-secondary)', 
+          overflowY: 'auto', 
+          overflowX: 'hidden',
+          padding: '8px 0',
+          transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+        }}
+      >
+        <div style={{ 
+          padding: '8px 16px 16px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: showSidebar ? 'space-between' : 'center',
+          borderBottom: '1px solid var(--border-primary)',
+          marginBottom: '8px'
+        }}>
+          {showSidebar && (
+            <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
+              Visualizers
+            </span>
+          )}
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            style={{ 
+              background: 'transparent', border: 'none', color: 'var(--text-primary)', 
+              cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+          >
+            <div style={{ position: 'relative', width: '16px', height: '12px' }}>
+              <span style={{
+                position: 'absolute', top: 0, left: 0, width: '16px', height: '1.5px', backgroundColor: 'currentColor', borderRadius: '2px',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: showSidebar ? 'translateY(5px) rotate(45deg)' : 'none'
+              }} />
+              <span style={{
+                position: 'absolute', top: '5px', left: 0, width: '16px', height: '1.5px', backgroundColor: 'currentColor', borderRadius: '2px',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                opacity: showSidebar ? 0 : 1,
+                transform: showSidebar ? 'translateX(-8px)' : 'none'
+              }} />
+              <span style={{
+                position: 'absolute', top: '10px', left: 0, width: '16px', height: '1.5px', backgroundColor: 'currentColor', borderRadius: '2px',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: showSidebar ? 'translateY(-5px) rotate(-45deg)' : 'none'
+              }} />
+            </div>
+          </button>
         </div>
+        
         {CATEGORIES.map((cat, index) => {
           if (cat === null) {
-            return <div key={`sep-${index}`} style={{ height: '1px', backgroundColor: 'var(--border-primary)', margin: '6px 16px' }} />;
+            return <div key={`sep-${index}`} style={{ height: '1px', backgroundColor: 'var(--border-primary)', margin: showSidebar ? '6px 16px' : '6px 8px', transition: 'margin 0.25s ease' }} />;
           }
           const Icon = cat.icon;
           const isActive = activeTab === cat.id;
           return (
             <button key={cat.id} onClick={() => setActiveTab(cat.id)}
               style={{
-                display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '8px 16px',
+                display: 'flex', alignItems: 'center', gap: '12px', width: '100%', 
+                padding: showSidebar ? '10px 16px' : '10px 0',
+                justifyContent: showSidebar ? 'flex-start' : 'center',
                 border: 'none', background: isActive ? 'rgba(196, 149, 106, 0.1)' : 'transparent',
                 color: isActive ? 'var(--accent)' : 'var(--text-secondary)', cursor: 'pointer',
                 fontSize: '12.5px', fontWeight: isActive ? 600 : 400, textAlign: 'left',
                 borderLeft: isActive ? '2px solid var(--accent)' : '2px solid transparent',
                 transition: 'all 0.12s ease',
               }}
+              title={!showSidebar ? cat.label : ''}
               onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
               onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
             >
-              <Icon size={15} />
-              <span>{cat.label}</span>
+              <Icon size={16} style={{ flexShrink: 0, marginLeft: showSidebar ? '0' : '-2px' }} />
+              {showSidebar && <span style={{ whiteSpace: 'nowrap' }}>{cat.label}</span>}
             </button>
           );
         })}

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAdminStats, getSystemHealth, reseedDatabase, clearSubmissions, listUsers, toggleUserRole } from '../controllers/adminController.js';
+import { getAdminStats, getSystemHealth, reseedDatabase, clearSubmissions, listUsers, toggleUserRole, deleteUser } from '../controllers/adminController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -18,5 +18,6 @@ router.post('/reseed', protect, adminOnly, reseedDatabase);
 router.delete('/submissions', protect, adminOnly, clearSubmissions);
 router.get('/users', protect, adminOnly, listUsers);
 router.put('/users/:userId/role', protect, adminOnly, toggleUserRole);
+router.delete('/users/:userId', protect, adminOnly, deleteUser);
 
 export default router;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Play, Pause, RotateCcw, Lightbulb, Code2, AlertCircle, CheckCircle2, SkipForward, ChevronRight, Eye, EyeOff } from 'lucide-react';
+import { Play, Pause, RotateCcw, Lightbulb, Code2, AlertCircle, CheckCircle2, SkipForward, ChevronRight, Eye, EyeOff, Gauge, Terminal, X } from 'lucide-react';
 import { CATEGORIES, LANGS, getTemplatesByCategory, getTemplateById } from '../components/playground/templates';
 import api from '../services/api';
 
@@ -28,10 +28,28 @@ export default function PlaygroundPage() {
 
   const [feedback, setFeedback] = useState('');
   const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [showOutput, setShowOutput] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const timerRef = useRef(null);
+  const outputRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // If clicking inside the output panel, do nothing
+      if (outputRef.current && outputRef.current.contains(e.target)) return;
+      // If clicking on a button that opens the output (like Run or AI Hint), let it handle itself
+      if (e.target.closest('button')) return; 
+      
+      setShowOutput(false);
+    };
+
+    if (showOutput) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showOutput]);
 
   // URL param
   useEffect(() => {
@@ -86,6 +104,7 @@ export default function PlaygroundPage() {
     // Check user actually wrote code (not just starter)
     if (userCode.trim() === selectedTemplate.starters[language].trim()) {
       setError('Please write your implementation first. The starter code is empty.');
+      setShowOutput(true);
       return;
     }
     
@@ -95,6 +114,7 @@ export default function PlaygroundPage() {
         const result = selectedTemplate.run(userCode, selectedTemplate.testData);
         if (!result || result.length === 0) {
           setError('No steps generated. Check your implementation.');
+          setShowOutput(true);
           return;
         }
         setSteps(result);
@@ -103,6 +123,7 @@ export default function PlaygroundPage() {
         setSuccess(`${result.length} steps generated.`);
       } catch (err) {
         setError(err.message || 'Execution error. Check syntax.');
+        setShowOutput(true);
       }
     } else {
       // For non-JS: Validate via AI, then visualize using JS solution
@@ -141,15 +162,18 @@ export default function PlaygroundPage() {
             }
           } catch (e) {
             setError('Visualization error: ' + e.message);
+            setShowOutput(true);
           }
         } else {
           // Code has issues - show feedback
           setFeedback(fb);
           setError('Code validation failed. See feedback below.');
+          setShowOutput(true);
         }
       } catch (err) {
         setFeedbackLoading(false);
         setFeedback('Could not validate. Make sure backend and Ollama are running.');
+        setShowOutput(true);
       }
     }
   }, [selectedTemplate, userCode, language]);
@@ -163,7 +187,7 @@ export default function PlaygroundPage() {
     finally { setFeedbackLoading(false); }
   };
 
-  const getHint = async () => { setFeedbackLoading(true); setFeedback(''); await getHintDirect(); };
+  const getHint = async () => { setShowOutput(true); setFeedbackLoading(true); setFeedback(''); await getHintDirect(); };
 
   const stepForward = () => { if (currentStep < steps.length - 1) { setIsRunning(false); if (timerRef.current) clearInterval(timerRef.current); setCurrentStep(p => p + 1); } };
 
@@ -325,36 +349,72 @@ export default function PlaygroundPage() {
   const lineNums = Array.from({ length: Math.max(15, lineCount) }, (_, i) => i + 1);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 48px)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-      {/* Top Bar: Categories + Language */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', flexShrink: 0 }}>
-        <div style={{ display: 'flex', overflowX: 'auto' }}>
-          {CATEGORIES.map(cat => (
-            <button key={cat} onClick={() => handleCategoryChange(cat)}
-              style={{ padding: '10px 16px', border: 'none', background: 'transparent', color: selectedCategory === cat ? 'var(--accent)' : 'var(--text-secondary)', borderBottom: selectedCategory === cat ? '2px solid var(--accent)' : '2px solid transparent', cursor: 'pointer', fontWeight: selectedCategory === cat ? 600 : 400, fontSize: '12px', whiteSpace: 'nowrap' }}>
-              {cat}
-            </button>
-          ))}
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', backgroundColor: 'transparent', color: 'var(--text-primary)', position: 'relative' }}>
+      {/* Unified Toolbar */}
+      <div style={{ display: 'flex', gap: '20px', alignItems: 'center', padding: '12px 24px', borderBottom: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', flexShrink: 0 }}>
+        
+        {/* Category Dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 500 }}>Topic:</span>
+          <select 
+            value={selectedCategory} 
+            onChange={e => handleCategoryChange(e.target.value)} 
+            style={{ 
+              padding: '8px 36px 8px 14px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-primary)', 
+              borderRadius: '8px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', fontSize: '13px',
+              appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cdcecf%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px top 50%', backgroundSize: '10px auto'
+            }}>
+            {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+          </select>
         </div>
-        {/* Language Selector */}
-        <div style={{ display: 'flex', gap: '4px', padding: '0 12px', flexShrink: 0 }}>
-          {LANGS.map(l => (
-            <button key={l} onClick={() => handleLanguageChange(l)}
-              style={{ padding: '4px 10px', borderRadius: '4px', border: '1px solid', borderColor: language === l ? 'var(--accent)' : 'var(--border-primary)', background: language === l ? 'rgba(196,149,106,0.15)' : 'transparent', color: language === l ? 'var(--accent)' : 'var(--text-muted)', cursor: 'pointer', fontSize: '10px', fontWeight: language === l ? 600 : 400 }}>
-              {LANG_LABELS[l]}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      {/* Sub Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-primary)', padding: '5px 14px', gap: '5px', flexShrink: 0, overflowX: 'auto' }}>
-        {getTemplatesByCategory(selectedCategory).map(t => (
-          <button key={t.id} onClick={() => handleTemplateChange(t)}
-            style={{ padding: '4px 10px', borderRadius: '4px', border: '1px solid', borderColor: selectedTemplate.id === t.id ? 'var(--accent)' : 'var(--border-primary)', background: selectedTemplate.id === t.id ? 'rgba(196,149,106,0.12)' : 'transparent', color: selectedTemplate.id === t.id ? 'var(--accent)' : 'var(--text-secondary)', cursor: 'pointer', fontSize: '11px', fontWeight: selectedTemplate.id === t.id ? 600 : 400, whiteSpace: 'nowrap' }}>
-            {t.label}
+        {/* Template Dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 500 }}>Algorithm:</span>
+          <select 
+            value={selectedTemplate.id} 
+            onChange={e => handleTemplateChange(getTemplatesByCategory(selectedCategory).find(t => t.id === e.target.value))} 
+            style={{ 
+              padding: '8px 36px 8px 14px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-primary)', 
+              borderRadius: '8px', color: 'var(--accent)', outline: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+              appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235227FF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px top 50%', backgroundSize: '10px auto'
+            }}>
+            {getTemplatesByCategory(selectedCategory).map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+          </select>
+        </div>
+
+        {/* Language Dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 500 }}>Language:</span>
+          <select 
+            value={language} 
+            onChange={e => handleLanguageChange(e.target.value)} 
+            style={{ 
+              padding: '8px 36px 8px 14px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-primary)', 
+              borderRadius: '8px', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', fontSize: '13px',
+              appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cdcecf%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px top 50%', backgroundSize: '10px auto'
+            }}>
+            {LANGS.map(l => <option key={l} value={l}>{LANG_LABELS[l]}</option>)}
+          </select>
+        </div>
+
+        <div style={{ flex: 1 }} />
+
+        {/* Unified Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button onClick={() => setSpeed(s => s === 150 ? 400 : s === 400 ? 800 : 150)} style={{ padding: '8px 14px', background: 'none', border: '1px solid var(--border-primary)', borderRadius: '6px', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Gauge size={14} /> Speed: {speed <= 150 ? 'Fast' : speed <= 400 ? 'Normal' : 'Slow'}
           </button>
-        ))}
+          <button onClick={() => { setUserCode(selectedTemplate.starters[language]); resetState(); }} style={{ padding: '8px 14px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <RotateCcw size={14} /> Reset
+          </button>
+          <button onClick={getHint} disabled={feedbackLoading} style={{ padding: '8px 14px', backgroundColor: 'rgba(196,149,106,0.08)', color: 'var(--accent)', border: '1px solid rgba(196,149,106,0.3)', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', opacity: feedbackLoading ? 0.6 : 1 }}>
+            <Lightbulb size={14} /> {feedbackLoading ? 'Thinking...' : 'AI Hint'}
+          </button>
+          <button onClick={runCode} disabled={feedbackLoading} style={{ padding: '8px 18px', backgroundColor: 'var(--accent)', color: '#000', border: 'none', borderRadius: '6px', cursor: feedbackLoading ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', opacity: feedbackLoading ? 0.7 : 1 }}>
+            <Play size={14} /> {feedbackLoading && language !== 'javascript' ? 'Validating...' : 'Run'}
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -386,53 +446,73 @@ export default function PlaygroundPage() {
               onKeyDown={e => { if (e.key === 'Tab') { e.preventDefault(); const s = e.target.selectionStart; setUserCode(userCode.substring(0,s)+'  '+userCode.substring(e.target.selectionEnd)); setTimeout(() => { e.target.selectionStart = e.target.selectionEnd = s+2; }, 0); } }}
             />
           </div>
-
-          {/* Action Bar */}
-          <div style={{ display: 'flex', gap: '8px', padding: '7px 12px', borderTop: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', alignItems: 'center', flexShrink: 0 }}>
-            <button onClick={runCode} style={{ padding: '6px 14px', backgroundColor: 'var(--accent)', color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 600, fontSize: '11px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Play size={13} /> Run
-            </button>
-            <button onClick={() => { setUserCode(selectedTemplate.starters[language]); resetState(); }} style={{ padding: '6px 10px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)', borderRadius: '4px', cursor: 'pointer', fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <RotateCcw size={11} /> Reset
-            </button>
-            <button onClick={getHint} disabled={feedbackLoading} style={{ padding: '6px 10px', backgroundColor: 'rgba(196,149,106,0.08)', color: 'var(--accent)', border: '1px solid rgba(196,149,106,0.3)', borderRadius: '4px', cursor: 'pointer', fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px', opacity: feedbackLoading ? 0.6 : 1 }}>
-              <Lightbulb size={11} /> {feedbackLoading ? 'Thinking...' : 'AI Hint'}
-            </button>
-            <div style={{ flex: 1 }} />
-            <button onClick={() => setSpeed(s => s === 150 ? 400 : s === 400 ? 800 : 150)} style={{ padding: '3px 7px', background: 'none', border: '1px solid var(--border-primary)', borderRadius: '4px', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '9px' }}>
-              {speed <= 150 ? 'Fast' : speed <= 400 ? 'Normal' : 'Slow'}
-            </button>
-          </div>
         </div>
 
         {/* Visualizer */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          <div style={{ padding: '7px 14px', borderBottom: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-            <span style={{ fontSize: '12px', fontWeight: 600 }}>Visualization</span>
-            {steps.length > 0 && <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Step {currentStep+1}/{steps.length}</span>}
-          </div>
-
           <div style={{ flex: 1, overflow: 'hidden' }}>{renderVisualizer()}</div>
 
           {steps.length > 0 && (
-            <div style={{ padding: '7px 16px', borderTop: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexShrink: 0 }}>
+            <div style={{ position: 'relative', padding: '7px 16px', borderTop: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexShrink: 0 }}>
               <button onClick={() => { setCurrentStep(0); setIsRunning(false); if (timerRef.current) clearInterval(timerRef.current); }} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '3px' }}><RotateCcw size={15} /></button>
               <button onClick={() => setIsRunning(!isRunning)} style={{ background: 'var(--accent)', border: 'none', color: '#000', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                 {isRunning ? <Pause size={14} /> : <Play size={14} />}
               </button>
               <button onClick={stepForward} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '3px' }}><SkipForward size={15} /></button>
+              
+              <div style={{ position: 'absolute', right: '16px', fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
+                Step {currentStep+1} / {steps.length}
+              </div>
             </div>
           )}
 
-          {/* Feedback */}
-          <div style={{ padding: '7px 12px', borderTop: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-primary)', minHeight: '40px', maxHeight: '70px', overflowY: 'auto', flexShrink: 0 }}>
-            {error && <div style={{ color: '#ef4444', fontSize: '11px', display: 'flex', gap: '5px', alignItems: 'flex-start' }}><AlertCircle size={13} style={{ flexShrink: 0, marginTop: '1px' }} /><span style={{ whiteSpace: 'pre-wrap' }}>{error}</span></div>}
-            {success && !error && !feedback && <div style={{ color: '#4CAF50', fontSize: '11px', display: 'flex', gap: '5px', alignItems: 'center' }}><CheckCircle2 size={13} /> {success}</div>}
-            {feedback && <div style={{ color: 'var(--text-primary)', fontSize: '11px', display: 'flex', gap: '5px', alignItems: 'flex-start' }}><Lightbulb size={13} color="var(--accent)" style={{ flexShrink: 0, marginTop: '1px' }} /><span style={{ whiteSpace: 'pre-wrap' }}>{feedback}</span></div>}
-            {!error && !success && !feedback && <div style={{ color: 'var(--text-muted)', fontSize: '11px' }}>Output and AI feedback will appear here.</div>}
-          </div>
         </div>
       </div>
+
+      {/* Full-Width Collapsible Output Panel */}
+      <div 
+        ref={outputRef}
+        style={{ 
+          height: showOutput ? '180px' : '0px', 
+          transition: 'height 0.3s cubic-bezier(0.16, 1, 0.3, 1)', 
+          overflowY: 'auto', 
+          backgroundColor: 'var(--bg-primary)',
+          borderTop: showOutput ? '1px solid var(--border-primary)' : 'none',
+          flexShrink: 0
+        }}
+      >
+        <div style={{ padding: '16px', lineHeight: 1.5 }}>
+          <button onClick={() => setShowOutput(false)} style={{ position: 'absolute', top: '12px', right: '16px', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+            <X size={16} />
+          </button>
+          {error && <div style={{ color: '#ef4444', fontSize: '12.5px', display: 'flex', gap: '8px', alignItems: 'flex-start', paddingRight: '24px' }}><AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} /><span style={{ whiteSpace: 'pre-wrap' }}>{error}</span></div>}
+          {success && !error && !feedback && <div style={{ color: '#4CAF50', fontSize: '12.5px', display: 'flex', gap: '8px', alignItems: 'center', paddingRight: '24px' }}><CheckCircle2 size={16} /> {success}</div>}
+          {feedback && <div style={{ color: 'var(--text-primary)', fontSize: '12.5px', display: 'flex', gap: '8px', alignItems: 'flex-start', paddingRight: '24px' }}><Lightbulb size={16} color="var(--accent)" style={{ flexShrink: 0, marginTop: '2px' }} /><span style={{ whiteSpace: 'pre-wrap' }}>{feedback}</span></div>}
+          {!error && !success && !feedback && <div style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>Output and AI feedback will appear here.</div>}
+        </div>
+      </div>
+
+      {/* Bottom Status Bar */}
+      <div style={{ 
+        height: showOutput ? '0px' : '32px', 
+        opacity: showOutput ? 0 : 1,
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        overflow: 'hidden',
+        backgroundColor: 'var(--bg-secondary)', 
+        borderTop: '1px solid var(--border-primary)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        padding: showOutput ? '0 16px' : '0 16px', 
+        flexShrink: 0 
+      }}>
+        <button 
+          onClick={() => setShowOutput(true)} 
+          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 600, padding: '4px 8px', borderRadius: '4px' }}
+        >
+          <Terminal size={13} /> Show Output
+        </button>
+      </div>
+
     </div>
   );
 }

@@ -152,6 +152,10 @@ export const listUsers = async (req, res) => {
  */
 export const toggleUserRole = async (req, res) => {
   try {
+    if (req.user._id.toString() === req.params.userId) {
+      return res.status(403).json({ error: 'Cannot revoke your own admin access' });
+    }
+
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
     
@@ -162,5 +166,34 @@ export const toggleUserRole = async (req, res) => {
   } catch (error) {
     console.error('Toggle role error:', error);
     res.status(500).json({ error: 'Failed to toggle user role' });
+  }
+};
+
+/**
+ * @route DELETE /api/admin/users/:userId
+ * @desc Delete a user account (admins cannot be deleted)
+ * @access Admin only
+ */
+export const deleteUser = async (req, res) => {
+  try {
+    if (req.user._id.toString() === req.params.userId) {
+      return res.status(403).json({ error: 'Cannot delete your own account' });
+    }
+
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    if (user.role === 'admin') {
+      return res.status(403).json({ error: 'Cannot delete another admin account. Revoke admin access first.' });
+    }
+
+    // Delete user and associated submissions
+    await Submission.deleteMany({ user: user._id });
+    await User.findByIdAndDelete(user._id);
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
   }
 };
