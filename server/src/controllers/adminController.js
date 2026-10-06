@@ -159,7 +159,15 @@ export const toggleUserRole = async (req, res) => {
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
     
-    user.role = user.role === 'admin' ? 'user' : 'admin';
+    if (user.email === 'admin@omnicode.com') {
+      return res.status(403).json({ error: 'Cannot modify the main admin account' });
+    }
+
+    if (user.role === 'admin' && req.user.email !== 'admin@omnicode.com') {
+      return res.status(403).json({ error: 'Only the main admin can revoke admin access' });
+    }
+
+    user.role = user.role === 'admin' ? 'student' : 'admin';
     await user.save();
     
     res.status(200).json({ message: `User role changed to ${user.role}`, user: { _id: user._id, username: user.username, role: user.role } });
@@ -183,8 +191,12 @@ export const deleteUser = async (req, res) => {
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    if (user.role === 'admin') {
-      return res.status(403).json({ error: 'Cannot delete another admin account. Revoke admin access first.' });
+    if (user.email === 'admin@omnicode.com') {
+      return res.status(403).json({ error: 'Cannot delete the main admin account' });
+    }
+
+    if (user.role === 'admin' && req.user.email !== 'admin@omnicode.com') {
+      return res.status(403).json({ error: 'Only the main admin can delete other admin accounts' });
     }
 
     // Delete user and associated submissions

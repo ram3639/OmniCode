@@ -235,9 +235,25 @@ export default function AdminDashboardPage() {
                 {users.map(user => {
                   const isAdmin = user.role === 'admin';
                   const isSelf = currentUser?._id === user._id;
+                  const isMainAdminRow = user.email === 'admin@omnicode.com';
+                  const amIMainAdmin = currentUser?.email === 'admin@omnicode.com';
+                  
+                  const cannotModify = isSelf || isMainAdminRow || (isAdmin && !amIMainAdmin);
+                  const modifyTooltip = isSelf ? "Cannot modify your own role" : 
+                                        isMainAdminRow ? "Main Admin cannot be modified" : 
+                                        (isAdmin && !amIMainAdmin) ? "Only Main Admin can revoke admins" : "";
+                  
+                  const cannotDelete = isSelf || isMainAdminRow || (isAdmin && !amIMainAdmin);
+                  const deleteTooltip = isSelf ? "Cannot delete yourself" : 
+                                        isMainAdminRow ? "Main Admin cannot be deleted" : 
+                                        (isAdmin && !amIMainAdmin) ? "Only Main Admin can delete admins" : "Delete user";
+
                   return (
                     <tr key={user._id} style={{ borderBottom: '1px solid var(--border-primary)', transition: 'background-color 0.2s' }}>
-                      <td style={{ padding: '16px 12px', color: 'var(--text-primary)', fontWeight: 600, fontSize: '13px' }}>{user.username} {isSelf && <span style={{ color: 'var(--text-muted)', fontSize: '11px', fontWeight: 400 }}>(You)</span>}</td>
+                      <td style={{ padding: '16px 12px', color: 'var(--text-primary)', fontWeight: 600, fontSize: '13px' }}>
+                        {user.username} {isSelf && <span style={{ color: 'var(--text-muted)', fontSize: '11px', fontWeight: 400 }}>(You)</span>}
+                        {isMainAdminRow && <span style={{ color: 'var(--accent)', fontSize: '11px', fontWeight: 600, marginLeft: '8px', padding: '2px 6px', backgroundColor: 'rgba(196,149,106,0.1)', borderRadius: '4px' }}>MAIN</span>}
+                      </td>
                       <td style={{ padding: '16px 12px', color: 'var(--text-secondary)', fontSize: '13px' }}>{user.email}</td>
                       <td style={{ padding: '16px 12px' }}>
                         <span style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', backgroundColor: 'var(--bg-primary)', color: 'var(--text-muted)', border: '1px solid var(--border-primary)' }}>
@@ -251,12 +267,12 @@ export default function AdminDashboardPage() {
                       </td>
                       <td style={{ padding: '16px 12px', textAlign: 'right' }}>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                          <button onClick={() => handleToggleRole(user._id)} disabled={isSelf} title={isSelf ? "Cannot modify your own role" : ""}
-                            style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 600, backgroundColor: isAdmin ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)', border: `1px solid ${isAdmin ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`, borderRadius: '6px', color: isAdmin ? '#ef4444' : '#10b981', cursor: isSelf ? 'not-allowed' : 'pointer', opacity: isSelf ? 0.3 : 1, transition: 'all 0.2s' }}>
+                          <button onClick={() => handleToggleRole(user._id)} disabled={cannotModify} title={modifyTooltip}
+                            style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 600, backgroundColor: isAdmin ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)', border: `1px solid ${isAdmin ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`, borderRadius: '6px', color: isAdmin ? '#ef4444' : '#10b981', cursor: cannotModify ? 'not-allowed' : 'pointer', opacity: cannotModify ? 0.3 : 1, transition: 'all 0.2s' }}>
                             {isAdmin ? 'Revoke Admin' : 'Grant Admin'}
                           </button>
-                          <button onClick={() => handleDeleteUser(user._id)} disabled={isSelf || isAdmin} title={isSelf ? "Cannot delete yourself" : isAdmin ? "Revoke admin access first" : "Delete user"}
-                            style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 600, backgroundColor: 'var(--bg-primary)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '6px', color: '#ef4444', cursor: (isSelf || isAdmin) ? 'not-allowed' : 'pointer', opacity: (isSelf || isAdmin) ? 0.3 : 1, transition: 'all 0.2s' }}>
+                          <button onClick={() => handleDeleteUser(user._id)} disabled={cannotDelete} title={deleteTooltip}
+                            style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 600, backgroundColor: 'var(--bg-primary)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '6px', color: '#ef4444', cursor: cannotDelete ? 'not-allowed' : 'pointer', opacity: cannotDelete ? 0.3 : 1, transition: 'all 0.2s' }}>
                             Delete
                           </button>
                         </div>
